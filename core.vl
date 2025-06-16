@@ -3,7 +3,10 @@ module core(
     input [31:0]instr,
     input [31:0]last_pc,
 
-    output [31:0]instr_addr
+    output [31:0]instr_addr,
+    output [31:0]mem_addr,
+    output [31:0]mem_data,
+    output mem_we
 );
 
 reg [31:0]pc = 0;
@@ -16,6 +19,7 @@ end
 
 wire [4:0]rd = instr[11:7];
 wire [4:0]rs1 = instr[19:15];
+wire [4:0]rs2 = instr[24:20];
 
 wire [31:0]alu_result;
 wire [31:0]alu_b_src = imm32;
@@ -26,13 +30,17 @@ alu alu(
 
 wire [31:0]rf_rdata0;
 wire [4:0]rf_raddr0 = rs1;
+
+wire [31:0]rf_rdata1;
+wire [4:0]rf_raddr1 = rs2;
+
 wire [31:0]rf_wdata = alu_result;
 wire [4:0] rf_waddr = rd;
 wire rf_we;
 reg_file rf(
     .clk(clk),
     .raddr0(rf_raddr0), rdata0(rf_rdata0),
-    .raddr1(5'b0);,
+    .raddr1(rf_raddr1), rdata1(rf_rdata1),
     .waddr(rf_waddr), .wdata(rf_wdata), .we(rf_we)
 );
 
@@ -43,7 +51,8 @@ control control(
     .instr(instr),
     .imm12(imm12),
     .rf_we(rf_we),
-    .alu_op(alu_op)
+    .alu_op(alu_op),
+    .mem_we(mem_we)
 );
 
 endmodule
