@@ -6,7 +6,7 @@ module top(
     output [4:0]V_B,
 );
 
-reg [2:0]pix = 3'b111;
+
 assign V_R = {5{pix[1]}};
 assign V_G = {6{pix[2]}};
 assign V_B = {5{pix[0]}};
@@ -19,6 +19,7 @@ wire [9:0]y;
 
 
 //SHOW_IMAGE
+//reg [2:0]pix = 3'b111;
 // vga_sync vga_sync(vga_clk, H_SYNC, V_SYNC, x, y);
 
 // always @(posedge vga_clk) begin
@@ -30,7 +31,7 @@ wire [9:0]y;
 // end
 
 //SHOW_TEXT
-
+reg [2:0]rgb;
 reg [12:0]vrom_addr;
 wire [2:0]vrom_q;
 wire [9:0]x_fwd = x + 1;
